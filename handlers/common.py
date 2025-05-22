@@ -8,8 +8,9 @@ import json
 import os
 import logging
 import math
+import html
 from datetime import datetime
-
+from typing import Union
 from utils import trigger_manager, admin_manager, database
 from config import SUPER_ADMIN_ID
 
@@ -167,7 +168,7 @@ async def process_response_type_selection(callback_query: CallbackQuery, state: 
     await state.set_state(LearnStates.waiting_for_response_content)
     await callback_query.answer()
 
-async def save_learned_trigger_final(message_or_cq: Message | CallbackQuery, state: FSMContext, actual_response_type: str, response_content: str):
+async def save_learned_trigger_final(message_or_cq: Union[Message, CallbackQuery], state: FSMContext, actual_response_type: str, response_content: str):
     user_obj = message_or_cq.from_user
     user_lang = user_obj.language_code if user_obj else 'en'
     locales = load_locale(user_lang); fsm_data = await state.get_data()
@@ -227,7 +228,7 @@ async def process_response_content_invalid(message: Message, state: FSMContext):
 
 
 # --- Admin Management Commands ---
-async def get_target_user_id(message: Message, command: CommandObject, locales: dict) -> int | None:
+async def get_target_user_id(message: Message, command: CommandObject, locales: dict) -> Union[int, None]:
     target_user_id_str = None
     if command.args:
         target_user_id_str = command.args.strip()
@@ -340,7 +341,7 @@ async def cmd_list_admins(message: Message):
 # --- Delete Trigger Command and Handlers ---
 DELETE_CALLBACK_PREFIX = "del_trigger:"
 DELETE_PAGE_CALLBACK_PREFIX = "del_page:"
-async def _send_delete_trigger_page(message_or_cq: Message | CallbackQuery, state: FSMContext, page: int = 0):
+async def _send_delete_trigger_page(message_or_cq: Union[Message, CallbackQuery], state: FSMContext, page: int = 0):
     user_id = message_or_cq.from_user.id
     user_lang = message_or_cq.from_user.language_code if message_or_cq.from_user else 'en'
     locales = load_locale(user_lang)
