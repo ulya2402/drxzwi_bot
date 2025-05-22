@@ -1,0 +1,18 @@
+{
+    "hai bot": {
+        "type": "animation",
+        "content": "CgACAgQAAxkBAAMGaC617-MOK7M_z7X3YYQfgfDCX0sAAsoCAAIxgg1Tqaep5UaEIM42BA"
+    },
+    "apa kabar": {
+        "type": "sticker",
+        "content": "CAACAgUAAxkBAAMQaC62NGuRakijhmB9rbUvB8KcfnMAAjYWAAJetVFWXw_mf8bobzk2BA"
+    },
+    "lagi apa": {
+        "type": "text",
+        "content": "Dudukkk"
+    },
+    "hi": {
+        "type": "photo",
+        "content": "AgACAgUAAxkBAAM6aC7GUvkMc1MGgI7_QTOTZHHUpecAApzHMRsFBnFVV6LlQ4wbzsIBAAMCAAN5AAM2BA"
+    }
+}
