@@ -1,6 +1,6 @@
 {
     "start_message": "Halo! Ada yang bisa saya bantu hari ini?\nAnda bisa mengajari saya respons baru menggunakan tombol di bawah ini",
-    "help_message": "Bot ini dapat mempelajari respons khusus. Berikut adalah beberapa perintah yang tersedia:\n/start - Mulai bot\n/help - Tampilkan pesan bantuan ini\n/learn - Ajari bot pemicu dan respons baru (Hanya Admin)\n/deletetrigger - Hapus pemicu yang telah dipelajari (Hanya Admin)\n/cancel - Batalkan proses belajar atau penghapusan saat ini\n\n👑 Manajemen Admin (Hanya Admin):\n- `/addadmin <user_id> atau balas pesan pengguna dengan /addadmin`\n- `/removeadmin <user_id> atau balas pesan pengguna dengan /removeadmin`\n- `/listadmins`",
+    "help_message": "Bot ini dapat mempelajari respons khusus. Berikut adalah beberapa perintah yang tersedia:\n/start - Mulai bot\n/help - Tampilkan pesan bantuan ini\n/learn - Ajari bot pemicu dan respons baru (Hanya Admin)\n/deletetrigger - Hapus pemicu yang telah dipelajari (Hanya Admin)\n/cancel - Batalkan proses belajar atau penghapusan saat ini\n\n👑 Manajemen Admin (Hanya Admin):\n- `/addadmin [USER_ID] atau balas pesan pengguna dengan /addadmin`\n- `/removeadmin [USER_ID] atau balas pesan pengguna dengan /removeadmin`\n- `/listadmins`",
     "learn_command_prompt": "Mari kita pelajari pemicu baru!\nFrasa apa yang harus saya tanggapi? (Ketik /cancel untuk berhenti)",
     "learn_trigger_received": "Baik! Saya akan menanggapi \"{trigger}\".",
     "learn_ask_response_type": "Jenis respons apa yang Anda inginkan untuk \"{trigger}\"?",
@@ -38,12 +38,12 @@
     "button_prev_page": "⬅️ Kembali",
     "button_page_info": "Hal {current_page}/{total_pages}",
     "admin_commands_header": "\n\n👑 Manajemen Admin (Hanya Admin):",
-    "add_admin_usage": "Penggunaan: /addadmin <user_id> atau balas pesan pengguna dengan /addadmin",
+    "add_admin_usage": "Penggunaan: <code>/addadmin [USER_ID]</code> atau balas pesan pengguna dengan <code>/addadmin</code>",
     "add_admin_success": "Pengguna {user_id} berhasil ditambahkan sebagai admin.",
     "add_admin_already_admin": "Pengguna {user_id} sudah menjadi admin.",
     "add_admin_failed": "Gagal menambahkan pengguna {user_id} sebagai admin.",
     "add_admin_invalid_id": "User ID tidak valid. Mohon berikan ID numerik.",
-    "remove_admin_usage": "Penggunaan: /removeadmin <user_id> atau balas pesan pengguna dengan /removeadmin",
+    "remove_admin_usage": "Penggunaan: <code>/removeadmin [USER_ID]</code> atau balas pesan pengguna dengan <code>/removeadmin</code>",
     "remove_admin_success": "Pengguna {user_id} berhasil dihapus dari daftar admin.",
     "remove_admin_not_admin": "Pengguna {user_id} bukan admin.",
     "remove_admin_failed": "Gagal menghapus pengguna {user_id} dari daftar admin.",
@@ -52,6 +52,6 @@
     "list_admins_title": "Admin Bot Saat Ini:",
     "list_admins_empty": "Belum ada admin yang dikonfigurasi (selain Super Admin).",
     "list_admins_entry": "- ID: {user_id} (Ditambahkan oleh: {added_by}, Pada: {added_at})",
-    "list_admins_super_admin_indicator": " (Super Admin dari .env)",
+    "list_admins_super_admin_indicator": " (Super Admin)",
     "permission_denied_admin_command": "Maaf, hanya admin bot yang dapat menggunakan perintah ini."
 }
