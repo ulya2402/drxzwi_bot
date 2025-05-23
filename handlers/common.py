@@ -10,9 +10,11 @@ import logging
 import math
 import html
 from datetime import datetime
+from zoneinfo import ZoneInfo
 from typing import Union
 from utils import trigger_manager, admin_manager, database
 from config import SUPER_ADMIN_ID
+from aiogram.enums import ParseMode
 
 router = Router()
 TRIGGERS_PER_PAGE = 7
@@ -440,19 +442,85 @@ async def process_confirm_delete_no(callback_query: CallbackQuery, state: FSMCon
     await _send_delete_trigger_page(callback_query, state, page=current_page)
     await callback_query.answer()
 
+@router.message(Command("placeholders"))
+async def cmd_placeholders(message: Message):
+    user_lang = message.from_user.language_code if message.from_user else 'en'
+    locales = load_locale(user_lang)
+
+    if not await is_admin(message.from_user.id):
+        await message.reply(locales.get("permission_denied_placeholders", "Sorry, only bot admins can view this."))
+        return
+
+    header = locales.get("placeholders_command_header", "Available placeholders:")
+    placeholders_desc_list = locales.get("placeholders_list", [])
+
+    response_text = header + "\n"
+    if placeholders_desc_list:
+        for item in placeholders_desc_list:
+            parts = item.split(" - ", 1)
+            if len(parts) == 2:
+                placeholder = parts[0]
+                description = parts[1]
+                response_text += f"\n`{placeholder}` - {description}"
+            else:
+                response_text += f"\n{item}" # Fallback if format is unexpected
+    else:
+        response_text += "\nNo placeholders defined in locale."
+
+    await message.answer(response_text, parse_mode=ParseMode.MARKDOWN)
+
+
 # --- General Message Handler ---
 @router.message(F.text)
 async def handle_triggered_messages(message: Message, bot: Bot, state: FSMContext):
     current_state_str = await state.get_state()
     if current_state_str is not None: return
     if not message.text or message.text.startswith('/'): return
+
     response_data = await trigger_manager.get_response_for_trigger(message.text)
     if response_data:
-        response_type = response_data.get("response_type"); content = response_data.get("response_content")
-        if not response_type or not content: logging.error(f"Incomplete response_data for '{message.text}': {response_data}"); return
+        response_type = response_data.get("response_type")
+        content = response_data.get("response_content")
+
+        if not response_type or not content:
+            logging.error(f"Incomplete response_data for '{message.text}': {response_data}")
+            return
+
         try:
-            if response_type == "text": await message.reply(content)
-            elif response_type == "photo": await bot.send_photo(message.chat.id, content, reply_to_message_id=message.message_id)
-            elif response_type == "animation": await bot.send_animation(message.chat.id, content, reply_to_message_id=message.message_id)
-            elif response_type == "sticker": await bot.send_sticker(message.chat.id, content, reply_to_message_id=message.message_id)
-        except Exception as e: logging.error(f"Failed to send response for '{message.text}': {e}", exc_info=True)
+            if response_type == "text":
+                processed_content = content
+
+                utc_now = datetime.now(ZoneInfo("UTC"))
+                wib_now = utc_now.astimezone(ZoneInfo("Asia/Jakarta"))
+                
+                processed_content = processed_content.replace("{date}", wib_now.strftime("%Y-%m-%d"))
+                processed_content = processed_content.replace("{time}", wib_now.strftime("%H:%M:%S"))
+                processed_content = processed_content.replace("{datetime}", wib_now.strftime("%Y-%m-%d %H:%M:%S"))
+
+                if message.from_user:
+                    user = message.from_user
+                    processed_content = processed_content.replace("{firstname}", html.escape(user.first_name))
+                    processed_content = processed_content.replace("{lastname}", html.escape(user.last_name or ""))
+                    processed_content = processed_content.replace("{fullname}", html.escape(user.full_name))
+                    processed_content = processed_content.replace("{username}", html.escape(user.username or ""))
+                    processed_content = processed_content.replace("{id}", str(user.id))
+                    processed_content = processed_content.replace("{mention}", user.mention_html())
+
+                if message.chat:
+                    processed_content = processed_content.replace("{chat_id}", str(message.chat.id))
+                    processed_content = processed_content.replace("{chat_title}", html.escape(message.chat.title or ""))
+
+                if bot:
+                    bot_user = await bot.get_me()
+                    processed_content = processed_content.replace("{bot_firstname}", html.escape(bot_user.first_name))
+                    processed_content = processed_content.replace("{bot_username}", html.escape(bot_user.username or ""))
+
+                await message.reply(processed_content)
+            elif response_type == "photo":
+                await bot.send_photo(message.chat.id, content, reply_to_message_id=message.message_id)
+            elif response_type == "animation":
+                await bot.send_animation(message.chat.id, content, reply_to_message_id=message.message_id)
+            elif response_type == "sticker":
+                await bot.send_sticker(message.chat.id, content, reply_to_message_id=message.message_id)
+        except Exception as e:
+            logging.error(f"Failed to send response for '{message.text}': {e}", exc_info=True)
