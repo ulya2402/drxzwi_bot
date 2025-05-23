@@ -61,7 +61,7 @@
     "{fullname} - User’s full name",
     "{username} - User’s username",
     "{id} - User’s ID",
-    "{mention} - HTML mention of the user",
+    "{mention} - mention of the user",
     "{date} - Current date (WIB)",
     "{time} - Current time (WIB)",
     "{datetime} - Current date and time (WIB)",
