@@ -61,7 +61,7 @@
         "{fullname} - Nama lengkap pengguna",
         "{username} - Username pengguna",
         "{id} - ID pengguna",
-        "{mention} - Mention HTML pengguna",
+        "{mention} - Mention pengguna",
         "{date} - Tanggal saat ini (WIB)",
         "{time} - Waktu saat ini (WIB)",
         "{datetime} - Tanggal dan waktu saat ini (WIB)",
